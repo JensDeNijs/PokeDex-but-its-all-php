@@ -1,0 +1,48 @@
+body{
+    background-color: #FFDE00;
+    font-family: 'Press Start 2P', cursive;
+    background-image: url("https://wallpapercave.com/wp/wp3354529.png");
+    background-size: cover;
+    background-position: center;
+}
+.bg-red{
+    background-color: #FF0000;
+}
+.bg-blue {
+    background-color: #3D7DCA;
+}
+
+.bg-dblue {
+    background-color: #003A70;
+}
+
+.bg-whitegrey {
+    background-color: #7d7070;
+}
+
+.bg-dred {
+    background-color: #CC0000;
+}
+
+.bg-black {
+    background-color: #050505;
+}
+
+.pokePicture {
+    width: 100%;
+    height: auto;
+}
+
+.pokesize {
+    width: 200px;
+    height: auto;
+}
+
+.textsmoll {
+    font-size: 12px;
+
+}
+.customsize{
+    width:50px;
+    height:50px;
+}
