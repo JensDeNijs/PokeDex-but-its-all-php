@@ -1,3 +1,4 @@
+<?php ?>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -10,7 +11,7 @@
 </head>
 <body>
 <form action="index.php" method="get">
-    <p>PokéMon Name/ID:<input type="text" name="inputPoke" value=""></p>
+    <p>PokéMon Name/ID:<input type="text" name="inputPoke" value="1"></p>
     <input type="submit">
 </form>
 <?php
