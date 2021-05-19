@@ -1,12 +1,14 @@
 <?php
+include 'includes/autoloader.inc.php';
 
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 
-$input= 1;
-if(isset($_GET["inputPoke"])){
-$input = $_GET["inputPoke"];
+$pokeName2 = "";
+$input = 1;
+if (isset($_GET["inputPoke"])) {
+    $input = $_GET["inputPoke"];
 }
 $url = 'https://pokeapi.co/api/v2/pokemon/' . $input;
 
@@ -23,13 +25,17 @@ if ($e = curl_error($ch)) {
     echo "";
 } else {
     $decoded = json_decode($resp, true);
-    $pokeName = $decoded["name"];
-    $pokeID = $decoded["id"];
-    $pokePic = $decoded["sprites"]["front_default"];
-    $pokeMove1 = $decoded["moves"]["0"]["move"]["name"];
-    $pokeMove2 = $decoded["moves"]["1"]["move"]["name"];
-    $pokeMove3 = $decoded["moves"]["2"]["move"]["name"];
-    $pokeMove4 = $decoded["moves"]["3"]["move"]["name"];
+
+    //Class Pokemon
+    $pokemon1 = new Pokemon(
+        $decoded["name"],
+        $decoded["id"],
+        $decoded["sprites"]["front_default"],
+        $decoded["moves"]["0"]["move"]["name"],
+        $decoded["moves"]["1"]["move"]["name"],
+        $decoded["moves"]["2"]["move"]["name"],
+        $decoded["moves"]["3"]["move"]["name"]
+    );
 }
 curl_close($ch);
 
@@ -93,8 +99,8 @@ curl_close($ch);
     <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
 </head>
 <body>
-<form action="index3.php" method="get">
-    <p>PokéMon Name/ID:<input type="text" name="inputPoke" value="1"></p>
+<form action="previous versions/index3.php" method="get">
+    <p>PokéMon Name/ID:<input type="text" name="inputPoke" value=""></p>
     <input type="submit">
 </form>
 <div class="container">
@@ -110,10 +116,10 @@ curl_close($ch);
                     <div class="row bg-dblue my-5 p-3 shadow-lg border border-dark rounded-lg">
                         <div class="col-12 bg-blue p-3 shadow-lg border border-dark  text-center">
                             <div class="pokesize">
-                                <p><?php print_r($pokeName); ?></p>
+                                <p><?php echo $pokemon1->getName() ?></p>
                             </div>
                             <div class="pokesize">
-                                <img src="<?php echo $pokePic ?>"
+                                <img src="<?php echo $pokemon1->getPic() ?>"
                                      alt="PokemonPic" id="pokePicture" class="pokePicture">
 
                             </div>
@@ -129,30 +135,30 @@ curl_close($ch);
                     <div class="col-12 bg-black p-1 shadow-lg   text-warning ">
                         <div class="row justify-content-center ">
                             <div class="col-12">
-                                <p>#<?php print_r($pokeID); ?> <?php print_r($pokeName); ?></p>
+                                <p>#<?php echo $pokemon1->getId() ?> <?php echo $pokemon1->getName() ?></p>
                             </div>
                         </div>
                         <div class="row justify-content-center textsmoll">
                             <div class="col-6">
-                                <?php print_r($pokeMove1); ?>
+                                <?php echo $pokemon1->getMove1() ?>
                             </div>
                             <div class="col-6">
-                                <?php print_r($pokeMove2); ?>
+                                <?php echo $pokemon1->getMove2() ?>
                             </div>
                         </div>
                         <div class="row justify-content-center textsmoll">
                             <div class="col-6">
-                                <?php print_r($pokeMove3); ?>
+                                <?php echo $pokemon1->getMove3() ?>
                             </div>
                             <div class="col-6">
-                                <?php print_r($pokeMove4); ?>
+                                <?php echo $pokemon1->getMove4() ?>
                             </div>
                         </div>
                     </div>
 
                 </div>
                 <div class="pokesize">
-                    <p><?php print_r($pokeName2); ?></p>
+                    <p><?php echo($pokeName2); ?></p>
                 </div>
                 <div class="pokesize">
                     <img alt="pokePic" id="pokePictureEvolve" class="pokePicture" src="<?php echo $pokePic2 ?>">
