@@ -10,83 +10,59 @@ $input = 1;
 if (isset($_GET["inputPoke"])) {
     $input = $_GET["inputPoke"];
 }
+
+//First API
 $url = 'https://pokeapi.co/api/v2/pokemon/' . $input;
+$json = apiData($url);
 
-$ch = curl_init();
+//Class Pokemon
+$pokemon1 = new Pokemon(
+    $json["name"],
+    $json["id"],
+    $json["sprites"]["front_default"],
+    $json["moves"]["0"]["move"]["name"],
+    $json["moves"]["1"]["move"]["name"],
+    $json["moves"]["2"]["move"]["name"],
+    $json["moves"]["3"]["move"]["name"]
+);
 
-curl_setopt($ch, CURLOPT_URL, $url);
-curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-
-$resp = curl_exec($ch);
-
-if ($e = curl_error($ch)) {
-    echo $e;
-    echo "";
-} else {
-    $decoded = json_decode($resp, true);
-
-    //Class Pokemon
-    $pokemon1 = new Pokemon(
-        $decoded["name"],
-        $decoded["id"],
-        $decoded["sprites"]["front_default"],
-        $decoded["moves"]["0"]["move"]["name"],
-        $decoded["moves"]["1"]["move"]["name"],
-        $decoded["moves"]["2"]["move"]["name"],
-        $decoded["moves"]["3"]["move"]["name"]
-    );
-}
-curl_close($ch);
-
-//part 2
-
+//Second API
 $url2 = 'https://pokeapi.co/api/v2/pokemon-species/' . $input;
+$json2 = apiData($url2);
 
-$ch2 = curl_init();
+if ($json2["evolves_from_species"]) {
 
-curl_setopt($ch2, CURLOPT_URL, $url2);
-curl_setopt($ch2, CURLOPT_RETURNTRANSFER, true);
-curl_setopt($ch2, CURLOPT_SSL_VERIFYPEER, false);
+    $pokeName2 = $json2["evolves_from_species"]["name"];
 
-$resp2 = curl_exec($ch2);
+    $url3 = 'https://pokeapi.co/api/v2/pokemon/' . $pokeName2;
 
-if ($e2 = curl_error($ch2)) {
-    echo $e2;
-    echo "";
+    //Third API
+    $json3 = apiData($url3);
+
+    //Second Pokemon
+    $pokemon2 = new Pokemon(
+        $json3["name"],
+        $json3["id"],
+        $json3["sprites"]["front_default"],
+        $json3["moves"]["0"]["move"]["name"],
+        $json3["moves"]["1"]["move"]["name"],
+        $json3["moves"]["2"]["move"]["name"],
+        $json3["moves"]["3"]["move"]["name"]
+    );
+    $pokeName2 = "Evolved from: <br>" . $pokemon2->getName();
+    $pokePic2 = $pokemon2->getPic();
+
 } else {
-    $decoded2 = json_decode($resp2, true);
-    if ($decoded2["evolves_from_species"]) {
-        $pokeName2 = $decoded2["evolves_from_species"]["name"];
-        $pokename2 = "Evolved from: <br>" . $pokeName2;
-
-        $url3 = 'https://pokeapi.co/api/v2/pokemon/' . $pokeName2;
-
-        //part 3
-        $ch3 = curl_init();
-
-        curl_setopt($ch3, CURLOPT_URL, $url3);
-        curl_setopt($ch3, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch3, CURLOPT_SSL_VERIFYPEER, false);
-
-        $resp3 = curl_exec($ch3);
-
-        if ($e3 = curl_error($ch3)) {
-            echo $e3;
-            echo "";
-        } else {
-            $decoded3 = json_decode($resp3, true);
-            $pokePic2 = $decoded3["sprites"]["front_default"];
-
-        }
-
-
-    } else {
-        $pokename2 = "";
-        $pokePic2 = "https://seeklogo.com/images/P/pokeball-logo-DC23868CA1-seeklogo.com.png";
-    }
+    $pokename2 = "";
+    $pokePic2 = "https://seeklogo.com/images/P/pokeball-logo-DC23868CA1-seeklogo.com.png";
 }
-curl_close($ch);
+
+function apiData($url)
+{
+    $jsonData = file_get_contents($url);
+    return json_decode($jsonData, true);
+}
+
 ?>
 <html lang="en">
 <head>
@@ -158,7 +134,7 @@ curl_close($ch);
 
                 </div>
                 <div class="pokesize">
-                    <p><?php echo($pokeName2); ?></p>
+                    <p><?php echo $pokeName2 ?></p>
                 </div>
                 <div class="pokesize">
                     <img alt="pokePic" id="pokePictureEvolve" class="pokePicture" src="<?php echo $pokePic2 ?>">
